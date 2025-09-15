@@ -19,6 +19,8 @@ coverage: test_calculator
 	mv test_calculator.c.gcov test_calculator-test_calculator.c.gcov || true
 	mv unity.c.gcov test_calculator-unity.c.gcov || true
 	lcov --capture --directory . --output-file coverage.info --ignore-errors source
+	# Only include calculator.c in the final coverage report
+	lcov --remove coverage.info '*/unity/*' '*/test_*' '*/unity.c' '*/test_calculator.c' --output-file coverage.info
 	genhtml coverage.info --output-directory coverage_html
 
 clean:

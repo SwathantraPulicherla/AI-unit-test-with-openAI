@@ -1,40 +1,77 @@
 import os
-import openai
 import re
+import subprocess
+import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-SRC_FILE = "calculator.c"
-TEST_FILE = "test_calculator.c"
-HEADER_FILE = "calculator.h"
-
-# Extract function signatures from header
-with open(HEADER_FILE) as f:
-    header = f.read()
-functions = re.findall(r'int\\s+(\\w+)\\s*\\(([^)]*)\\)\\s*;', header)
-
-# Read existing test file
-if os.path.exists(TEST_FILE):
-    with open(TEST_FILE) as f:
-        test_code = f.read()
-else:
-    test_code = ""
-
-new_tests = []
-for func, args in functions:
-    # Check if a test for this function exists
-    if f"{func}(" in test_code:
-        continue
-    # Generate a test case using OpenAI
-    prompt = f"Write a Unity C test case for the function: int {func}({args}) in calculator.c. Use TEST_CASE and TEST_ASSERT macros. Only output the test function, no explanation."
-    response = openai.ChatCompletion.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}]
+def get_changed_files():
+    """Get .c files changed in the last commit."""
+    result = subprocess.run(
+        ["git", "diff", "--name-only", "HEAD~1", "HEAD"],
+        stdout=subprocess.PIPE, text=True
     )
-    test_func = response.choices[0].message.content.strip()
-    new_tests.append(test_func)
+    return [f.strip() for f in result.stdout.splitlines() if f.endswith('.c')]
 
-if new_tests:
-    with open(TEST_FILE, "a") as f:
-        for test in new_tests:
+def extract_functions(filepath):
+    """Extract all function signatures and names from a C source file."""
+    with open(filepath) as f:
+        content = f.read()
+    # This regex matches most C function signatures (single-line)
+    pattern = r'((?:[A-Za-z_][A-ZaZ0-9_\s\*\(\)]*?)\s+(\w+)\s*\([^;{]*\)\s*{)'
+    return list(re.finditer(pattern, content))
+
+def test_exists(test_file, func_name):
+    """Check if a test for the function already exists in the test file."""
+    if not os.path.exists(test_file):
+        return False
+    with open(test_file) as f:
+        return f"test_{func_name}" in f.read()
+
+def generate_test(signature, func_name):
+    """Generate a Unity test function for the given function signature using OpenAI."""
+    prompt = f"""Write a Unity C unit test function named test_{func_name} for the following C function:
+{signature};
+
+The test should use TEST_ASSERT macros and cover at least one typical use case."""
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=200,
+            temperature=0.2,
+            n=1,
+        )
+        return response.choices[0].text.strip()
+    except Exception as e:
+        print(f"OpenAI API error: {e}")
+        return None
+
+def append_tests_to_file(test_file, tests):
+    """Append generated test functions to the test file."""
+    with open(test_file, "a") as f:
+        for test in tests:
             f.write("\n" + test + "\n")
+
+def main():
+    # Adjust test file path as per your workspace structure
+    test_file = "test_calculator.c"
+    changed_files = get_changed_files()
+    if not changed_files:
+        print("No .c files changed in the last commit.")
+        return
+
+    generated = 0
+    for file in changed_files:
+        for match in extract_functions(file):
+            signature, func_name = match.groups()
+            if not test_exists(test_file, func_name):
+                test_code = generate_test(signature, func_name)
+                if test_code:
+                    print(f"Generated test for {func_name}:\n{test_code}\n")
+                    append_tests_to_file(test_file, [test_code])
+                    generated += 1
+    print(f"\nGenerated {generated} new test(s).")
+
+if __name__ == "__main__":
+    main()
