@@ -1,1 +1,1 @@
-genhtml coverage.info --output-directory coverage_html
+genhtml coverage.info --output-directory coverage_html --ignore-errors source
