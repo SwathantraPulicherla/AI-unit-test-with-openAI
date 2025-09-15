@@ -39,7 +39,7 @@ The test should use TEST_ASSERT macros and cover at least one typical use case. 
         response = client.text_generation(prompt, max_new_tokens=200, temperature=0.2)
         return response.strip()
     except Exception as e:
-        print(f"Hugging Face API error: {e}")
+        print(f"Hugging Face API error: {repr(e)}")
         return None
 
 def append_tests_to_file(test_file, tests):
