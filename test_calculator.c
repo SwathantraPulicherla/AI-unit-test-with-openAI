@@ -37,6 +37,5 @@ int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_subtract);
     RUN_TEST(test_add);
-
     return UNITY_END();
 }
