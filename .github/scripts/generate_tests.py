@@ -8,7 +8,7 @@ def get_hf_token():
         raise RuntimeError("Hugging Face token not set. Please set HF_TOKEN environment variable.")
     return token
 
-MODEL = "codellama/CodeLlama-7b-hf"
+MODEL = "bigcode/starcoderbase"
 
 def safe_open(filename, mode="r"):
     # Only allow files in the current directory, no path traversal or absolute paths
