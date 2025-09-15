@@ -1,74 +1,60 @@
 import os
 import re
-import openai
+import requests
 
-openai.api_key = os.getenv("OPENAI_API_KEY")  # Or Hugging Face if you want later
+# Hugging Face API setup
+HF_API_TOKEN = os.getenv("HF_TOKEN")  # use GitHub secret HF_TOKEN
+MODEL = "bigcode/starcoder"  # can change to codellama or others
 
-SRC_DIR = "."  # root folder containing your .c files
-TEST_FILE = "tests/test_calculator.c"
-
-# Regex for function definitions (skip forward declarations & comments)
-FUNC_PATTERN = re.compile(
-    r'^\s*(?:[A-Za-z_][A-Za-z0-9_\s\*]*?)\s+(\w+)\s*\([^;{]*\)\s*{',
-    re.MULTILINE
-)
-
-
-def extract_functions_from_c(filepath):
-    with open(filepath) as f:
-        content = f.read()
-    return set(FUNC_PATTERN.findall(content))
-
-
-def get_all_c_functions(src_dir):
-    functions = set()
-    for root, _, files in os.walk(src_dir):
-        for file in files:
-            if file.endswith(".c") and "test" not in file:  # skip test files
-                functions |= extract_functions_from_c(os.path.join(root, file))
-    return functions
-
-
-def test_exists(test_file, func_name):
-    if not os.path.exists(test_file):
-        return False
-    with open(test_file) as f:
-        return f"test_{func_name}" in f.read()
-
-
-def generate_test(func_name):
-    # Keep it simple: generate placeholder test, not real AI code
-    return f"""
-// TODO: Write real test for {func_name}
-void test_{func_name}() {{
-    // Copilot/AI can expand this
-}}
-"""
-
-
-def append_tests_to_file(test_file, tests):
-    os.makedirs(os.path.dirname(test_file), exist_ok=True)
-    with open(test_file, "a") as f:
-        for test in tests:
-            f.write("\n" + test + "\n")
-
-
-def main():
-    all_funcs = get_all_c_functions(SRC_DIR)
-    print(f"Found {len(all_funcs)} function(s) in project.")
-
-    new_tests = []
-    for func in sorted(all_funcs):
-        if not test_exists(TEST_FILE, func):
-            print(f"Generating test stub for: {func}")
-            new_tests.append(generate_test(func))
-
-    if new_tests:
-        append_tests_to_file(TEST_FILE, new_tests)
-        print(f"\n✅ Added {len(new_tests)} new test stub(s) to {TEST_FILE}.")
+def call_huggingface(prompt: str) -> str:
+    url = f"https://api-inference.huggingface.co/models/{MODEL}"
+    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+    payload = {"inputs": prompt, "parameters": {"max_new_tokens": 300}}
+    
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code != 200:
+        raise RuntimeError(f"Hugging Face API error: {response.text}")
+    
+    data = response.json()
+    if isinstance(data, list) and "generated_text" in data[0]:
+        return data[0]["generated_text"]
+    elif isinstance(data, dict) and "error" in data:
+        raise RuntimeError(data["error"])
     else:
-        print("\n🎉 All functions already have test stubs!")
+        return str(data)
 
+def extract_functions(c_code: str):
+    """Find all C function signatures from source code."""
+    pattern = r"\b\w+\s+\**\w+\s*\([^)]*\)\s*{"
+    return re.findall(pattern, c_code)
+
+def generate_test_for_function(function_sig: str) -> str:
+    prompt = f"""
+Write a C unit test for the following function.
+Only output compilable C code inside a test function (using Unity or a simple assert-based test).
+
+Function:
+{function_sig}
+"""
+    return call_huggingface(prompt)
 
 if __name__ == "__main__":
-    main()
+    c_files = []
+    for root, _, files in os.walk("."):
+        for f in files:
+            if f.endswith(".c"):
+                c_files.append(os.path.join(root, f))
+
+    for c_file in c_files:
+        with open(c_file, "r") as f:
+            code = f.read()
+
+        functions = extract_functions(code)
+        for func in functions:
+            test_code = generate_test_for_function(func)
+            test_filename = c_file.replace(".c", "_test.c")
+            with open(test_filename, "a") as tf:
+                tf.write("\n\n/* Test for: {} */\n".format(func))
+                tf.write(test_code)
+            
+            print(f"✅ Generated test for {func} → {test_filename}")
