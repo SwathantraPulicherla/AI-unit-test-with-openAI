@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-09-15 09:53:48</td>
+            <td class="headerValue">2025-09-15 13:39:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -66,26 +66,26 @@
 <span id="L4"><span class="lineNum">       4</span>              : static int tests_run = 0;</span>
 <span id="L5"><span class="lineNum">       5</span>              : static int tests_failed = 0;</span>
 <span id="L6"><span class="lineNum">       6</span>              : </span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC tlaBgGNC">           3 : void UnityBegin(const char* name) {</span></span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">           3 :     printf(&quot;==== Unity Test: %s ===\n&quot;, name);</span></span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">           3 :     tests_run = 0;</span></span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">           3 :     tests_failed = 0;</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC tlaBgGNC">           4 : void UnityBegin(const char* name) {</span></span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">           4 :     printf(&quot;==== Unity Test: %s ===\n&quot;, name);</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">           4 :     tests_run = 0;</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">           4 :     tests_failed = 0;</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           4 : }</span></span>
 <span id="L12"><span class="lineNum">      12</span>              : </span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           3 : void UnityEnd(void) {</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           3 :     printf(&quot;==== Tests Run: %d, Failures: %d ===\n&quot;, tests_run, tests_failed);</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           3 :     if (tests_failed == 0) {</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           3 :         printf(&quot;ALL TESTS PASSED\n&quot;);</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           4 : void UnityEnd(void) {</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           4 :     printf(&quot;==== Tests Run: %d, Failures: %d ===\n&quot;, tests_run, tests_failed);</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           4 :     if (tests_failed == 0) {</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           4 :         printf(&quot;ALL TESTS PASSED\n&quot;);</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :     }</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           4 : }</span></span>
 <span id="L19"><span class="lineNum">      19</span>              : </span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">           6 : void UnityAssertEqualNumber(int expected, int actual, const char* msg, int line) {</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           6 :     tests_run++;</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           6 :     if (expected != actual) {</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">           8 : void UnityAssertEqualNumber(int expected, int actual, const char* msg, int line) {</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           8 :     tests_run++;</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           8 :     if (expected != actual) {</span></span>
 <span id="L23"><span class="lineNum">      23</span> <span class="tlaUNC tlaBgUNC">           0 :         printf(&quot;FAIL: %s (line %d): expected %d, got %d\n&quot;, msg, line, expected, actual);</span></span>
 <span id="L24"><span class="lineNum">      24</span> <span class="tlaUNC">           0 :         tests_failed++;</span></span>
 <span id="L25"><span class="lineNum">      25</span>              :     }</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC tlaBgGNC">           6 : }</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC tlaBgGNC">           8 : }</span></span>
         </pre>
               </td>
             </tr>
