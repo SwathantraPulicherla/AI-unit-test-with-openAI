@@ -51,3 +51,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./coverage_html
           publish_branch: gh-pages
+      - name: Show coverage report link
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "🔗 [View Coverage Report](https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/)" >> $GITHUB_STEP_SUMMARY
