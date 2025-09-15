@@ -1,1 +1,1 @@
-genhtml coverage.info --output-directory coverage_html --ignore-errors source --synthesize-missing
+genhtml coverage.info --output-directory coverage_html --ignore-errors source --substitute s|/workspaces/AI-unit-test-with-openAI/|./|
