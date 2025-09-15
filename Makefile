@@ -14,7 +14,7 @@ run-tests: test_calculator
 
 coverage: test_calculator
 	./test_calculator
-	gcov calculator.c test_calculator.c unity/unity.c
+	gcov test_calculator-calculator.gcno test_calculator-test_calculator.gcno test_calculator-unity.gcno || true
 	lcov --capture --directory . --output-file coverage.info
 	genhtml coverage.info --output-directory coverage_html
 
