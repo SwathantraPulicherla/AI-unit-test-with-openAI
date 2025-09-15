@@ -11,21 +11,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install huggingface_hub
-
-      - name: Export Hugging Face token
-        run: echo "HF_TOKEN=${{ secrets.HF_TOKEN }}" >> $GITHUB_ENV
-
-      - name: Generate missing test cases with Hugging Face
-        run: python .github/scripts/generate_tests.py
-
+      - name: Install OpenAI Python SDK
+        run: pip install openai
+      - name: Generate missing test cases with OpenAI
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python .github/scripts/generate_tests.py
       - name: Commit and push new tests (if any)
         run: |
           git config --global user.name "github-actions"
@@ -39,27 +35,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y lcov gcc make
-
       - name: Build and run tests
         run: make coverage
-
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage_html
           path: coverage_html
-
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./coverage_html
           publish_branch: gh-pages
-
       - name: Show coverage report link
         if: github.ref == 'refs/heads/main'
         run: |
