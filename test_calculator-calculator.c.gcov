@@ -1,0 +1,9 @@
+        -:    0:Source:calculator.c
+        -:    1:// calculator.c
+        -:    2:// Simple calculator with add function
+        -:    3:
+        -:    4:#include "calculator.h"
+        -:    5:
+        6:    6:int add(int a, int b) {
+        6:    7:    return a + b;
+        -:    8:}

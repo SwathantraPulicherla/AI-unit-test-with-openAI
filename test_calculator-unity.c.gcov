@@ -1,0 +1,27 @@
+        -:    0:Source:unity/unity.c
+        -:    1:#include <stdio.h>
+        -:    2:#include "unity.h"
+        -:    3:
+        -:    4:static int tests_run = 0;
+        -:    5:static int tests_failed = 0;
+        -:    6:
+        3:    7:void UnityBegin(const char* name) {
+        3:    8:    printf("==== Unity Test: %s ===\n", name);
+        3:    9:    tests_run = 0;
+        3:   10:    tests_failed = 0;
+        3:   11:}
+        -:   12:
+        3:   13:void UnityEnd(void) {
+        3:   14:    printf("==== Tests Run: %d, Failures: %d ===\n", tests_run, tests_failed);
+        3:   15:    if (tests_failed == 0) {
+        3:   16:        printf("ALL TESTS PASSED\n");
+        -:   17:    }
+        3:   18:}
+        -:   19:
+        6:   20:void UnityAssertEqualNumber(int expected, int actual, const char* msg, int line) {
+        6:   21:    tests_run++;
+        6:   22:    if (expected != actual) {
+    #####:   23:        printf("FAIL: %s (line %d): expected %d, got %d\n", msg, line, expected, actual);
+    #####:   24:        tests_failed++;
+        -:   25:    }
+        6:   26:}

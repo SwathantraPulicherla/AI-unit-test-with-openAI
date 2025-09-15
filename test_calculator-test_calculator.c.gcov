@@ -1,0 +1,20 @@
+        -:    0:Source:test_calculator.c
+        -:    1:
+        -:    2:#include "unity/unity.h"
+        -:    3:#include "calculator.h"
+        -:    4:
+        3:    5:TEST_CASE(test_add_positive) {
+        3:    6:    TEST_ASSERT_EQUAL_INT(5, add(2, 3));
+        3:    7:}
+        -:    8:
+        3:    9:TEST_CASE(test_add_negative) {
+        3:   10:    TEST_ASSERT_EQUAL_INT(-1, add(2, -3));
+        3:   11:}
+        -:   12:
+        3:   13:int main(void) {
+        3:   14:    UnityBegin("test_calculator.c");
+        3:   15:    RUN_TEST(test_add_positive);
+        3:   16:    RUN_TEST(test_add_negative);
+        3:   17:    UnityEnd();
+        3:   18:    return 0;
+        -:   19:}

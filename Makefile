@@ -14,8 +14,11 @@ run-tests: test_calculator
 
 coverage: test_calculator
 	./test_calculator
-	gcov test_calculator-calculator.gcno test_calculator-test_calculator.gcno test_calculator-unity.gcno || true
-	lcov --capture --directory . --output-file coverage.info
+	gcov test_calculator-calculator.gcno test_calculator-test_calculator.gcno test_calculator-unity.gcno -o . || true
+	mv calculator.c.gcov test_calculator-calculator.c.gcov || true
+	mv test_calculator.c.gcov test_calculator-test_calculator.c.gcov || true
+	mv unity.c.gcov test_calculator-unity.c.gcov || true
+	lcov --capture --directory . --output-file coverage.info --ignore-errors source
 	genhtml coverage.info --output-directory coverage_html
 
 clean:
