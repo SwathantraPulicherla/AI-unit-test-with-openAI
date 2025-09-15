@@ -15,11 +15,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install OpenAI Python SDK
-        run: pip install openai
-      - name: Generate missing test cases with OpenAI
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: Install Hugging Face Hub Python SDK
+        run: pip install huggingface_hub
+      - name: Export Hugging Face token
+        run: echo "HF_TOKEN=${{ secrets.HF_TOKEN }}" >> $GITHUB_ENV
+      - name: Generate missing test cases with Hugging Face
         run: |
           python .github/scripts/generate_tests.py
       - name: Commit and push new tests (if any)
