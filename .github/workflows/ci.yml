@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add tests/test_*.c
+          git add test_*.c
           git diff --cached --quiet || git commit -m "Add AI-generated tests" && git push || echo "No new tests to commit"
 
   build-test-coverage:
