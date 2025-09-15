@@ -54,15 +54,11 @@ def append_tests_to_file(test_file, tests):
             f.write("\n" + test + "\n")
 
 def main():
-    # Adjust test file path as per your workspace structure
     test_file = "test_calculator.c"
-    changed_files = get_changed_files()
-    if not changed_files:
-        print("No .c files changed in the last commit.")
-        return
-
+    # Scan all source/header files for functions
+    source_files = [f for f in os.listdir(".") if f.endswith(".c") or f.endswith(".h")]
     generated = 0
-    for file in changed_files:
+    for file in source_files:
         for match in extract_functions(file):
             signature, func_name = match.groups()
             if not test_exists(test_file, func_name):
