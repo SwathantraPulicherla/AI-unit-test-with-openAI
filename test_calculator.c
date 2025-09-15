@@ -3,7 +3,7 @@
 #include "calculator.h"
 
 TEST_CASE(test_add_positive) {
-    TEST_ASSERT_EQUAL_INT(5, add(2, 3));
+    TEST_ASSERT_EQUAL_INT(6, add(3, 3));
 }
 
 TEST_CASE(test_add_negative) {
