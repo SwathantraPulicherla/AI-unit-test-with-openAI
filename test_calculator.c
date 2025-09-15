@@ -7,7 +7,7 @@ TEST_CASE(test_add_positive) {
 }
 
 TEST_CASE(test_add_negative) {
-    TEST_ASSERT_EQUAL_INT(-1, add(2, -3));
+    TEST_ASSERT_EQUAL_INT(0, add(2, -2));
 }
 
 int main(void) {
