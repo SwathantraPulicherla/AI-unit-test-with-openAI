@@ -21,7 +21,7 @@ coverage: test_calculator
 	lcov --capture --directory . --output-file coverage.info --ignore-errors source
 	# Only include calculator.c in the final coverage report
 	lcov --remove coverage.info '*/unity/*' '*/test_*' --output-file coverage.info
-	genhtml coverage.info --output-directory coverage_html --ignore-errors source
+	genhtml coverage.info --output-directory coverage_html --ignore-errors source --substitute /workspaces/AI-unit-test-with-openAI/ .
 
 clean:
 	rm -f *.o *.gcda *.gcno *.gcov test_calculator coverage.info
