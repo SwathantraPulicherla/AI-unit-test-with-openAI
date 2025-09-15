@@ -20,7 +20,7 @@ coverage: test_calculator
 	mv unity.c.gcov test_calculator-unity.c.gcov || true
 	lcov --capture --directory . --output-file coverage.info --ignore-errors source
 	lcov --remove coverage.info '*/unity/*' '*/test_*' --output-file coverage.info
-	genhtml coverage.info --output-directory coverage_html --ignore-errors source --substitute '^/workspaces/AI-unit-test-with-openAI/' .
+	genhtml coverage.info --output-directory coverage_html --ignore-errors source --substitute 's|/workspaces/AI-unit-test-with-openAI/|./|'
 
 clean:
 	rm -f *.o *.gcda *.gcno *.gcov test_calculator coverage.info
