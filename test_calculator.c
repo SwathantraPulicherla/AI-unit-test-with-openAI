@@ -33,9 +33,20 @@ void test_add(void) {
 
 
 
+
+void test_multiply(void) {
+        TEST_ASSERT_EQUAL_INT(multiply(3, 2), multiply(3, 2));
+    TEST_ASSERT_EQUAL_INT(multiply(2, 3), multiply(2, 3));
+    TEST_ASSERT_EQUAL_INT(multiply(5, 5), multiply(5, 5));
+    TEST_ASSERT_EQUAL_INT(multiply(-5, 3), multiply(-5, 3));
+    TEST_ASSERT_EQUAL_INT(multiply(5, -3), multiply(5, -3));
+}
+
+
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_subtract);
     RUN_TEST(test_add);
+    RUN_TEST(test_multiply);
     return UNITY_END();
 }
