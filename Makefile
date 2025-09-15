@@ -12,14 +12,15 @@ test_calculator: $(SRC)
 run-tests: test_calculator
 	./test_calculator
 
-coverage: test_calculator
-	./test_calculator
-	gcov test_calculator-calculator.gcno test_calculator-test_calculator.gcno test_calculator-unity.gcno -o . || true
-	mv calculator.c.gcov test_calculator-calculator.c.gcov || true
-	mv test_calculator.c.gcov test_calculator-test_calculator.c.gcov || true
-	mv unity.c.gcov test_calculator-unity.c.gcov || true
+coverage: $(TARGET)
+	./$(TARGET)
+	gcov calculator.c -o . || true
+	gcov test_calculator.c -o . || true
+	gcov unity/unity.c -o . || true
 	lcov --capture --directory . --output-file coverage.info --ignore-errors source
-	genhtml coverage.info --output-directory coverage_html
+	# Only include calculator.c in the final coverage report
+	lcov --extract coverage.info '*/calculator.c' --output-file coverage.info
+	genhtml coverage.info --output-directory coverage_html --ignore-errors source --substitute 's|/workspaces/AI-unit-test-with-openAI/|./|'
 
 clean:
 	rm -f *.o *.gcda *.gcno *.gcov test_calculator coverage.info
